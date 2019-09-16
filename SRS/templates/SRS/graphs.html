@@ -1,0 +1,20 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Graphs for Faculty</title>
+</head>
+<body>
+	{% with 'graphs/graph_'|add:fCode|add:'.png' as fPath %}
+	<img src="{% static fPath %}">
+	{% endwith %}
+	{% with 'graphs/pie_'|add:fCode|add:'.png' as fPath %}
+	<img src="{% static fPath %}">
+	{% endwith %}
+	<form method="POST" action="/goBack/"> {% csrf_token %}
+		<input type="hidden" name="fCode" value="{{ fCode }}">
+		<button type="submit">Go Back</button>
+	</form>
+</body>
+</html>

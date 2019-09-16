@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SRS</title>
+	<style type="text/css">
+		#attendance{
+			border: 1px solid green;
+		}
+	</style>
+</head>
+<body>
+	Welcome {{ user.facultyName }}
+	<div class="leftnav">
+		<button>Personal Info</button>
+		<button>Attendance</button>
+		<button>SRS</button>
+		<button>Subjects</button>
+		<button>Settings</button>
+		<button onclick="window.location = '/'">Logout</button>
+	</div>
+	<div class="container">
+		<div id="pInfo">
+			<table>
+				<tr>
+					<td>University</td>
+					<td>{{ uni }}</td>
+				</tr>
+			</table>
+		</div>
+		<div id="attendance">
+			<form method="POST" action="/updateAttendance/"> {% csrf_token %}
+				<input type="hidden" value="{{ user.facultyCode }}" name="fCode">
+				{% for attObj in attendance %}
+					{{ attObj.courseCode }} : {{ attObj.studentID }} : <br>
+					Attended:
+					<button onclick="decrement('{{ attObj.courseCode }}_{{ attObj.studentID }}_Att')">-</button>
+					<input type="text" id="{{ attObj.courseCode }}_{{ attObj.studentID }}_Att" value="{{ attObj.attended }}" name="{{ attObj.courseCode }}_{{ attObj.studentID }}_Att">
+					<button onclick="increment('{{ attObj.courseCode }}_{{ attObj.studentID }}_Att')">+</button>
+					Bunked:
+					<button onclick="decrement('{{ attObj.courseCode }}_{{ attObj.studentID }}_Bun')">-</button>
+					<input type="text" id="{{ attObj.courseCode }}_{{ attObj.studentID }}_Bun" value="{{ attObj.bunked }}" name="{{ attObj.courseCode }}_{{ attObj.studentID }}_Bun">
+					<button onclick="increment('{{ attObj.courseCode }}_{{ attObj.studentID }}_Bun')">+</button>
+					<hr>
+				{% endfor %}
+				<button type="submit">Update</button>
+			</form>
+			OR
+			<form method="POST" action="/update_by_list/"> {% csrf_token %}
+				Batch: <select name="batch">
+					{% for batch in batches %}
+						<option value="{{ batch.batch }}">{{ batch.batch }}</option>
+					{% endfor %}
+				</select>
+				<input type="hidden" name="fCode" value="{{ user.facultyCode }}">
+				List of Roll Numbers of Present
+				<textarea placeholder="studentsList" id="sList" name="studentsList"></textarea>
+				<button type="submit">Update</button>
+			</form>
+			<input type="file" id="file" onchange="load();">
+		</div>
+	</div>
+	<div id="password">
+		<form method="POST" action="/update_password_faculty/"> {% csrf_token %}
+			<input type="hidden" name="fCode" value="{{ user.facultyCode }}">
+			<input type="password" name="psd" placeholder="New Password">
+			<input type="password" name="psdc" placeholder="Confirm Password">
+			<button type="submit">Update</button>
+		</form>
+	</div>
+	<div>
+		<form method="POST" action="/getGraph/"> {% csrf_token %}
+			<input type="hidden" name="fCode" value="{{ user.facultyCode }}">
+			<button type="Submit">Get Graphs</button>
+		</form>
+	</div>
+	<script type="text/javascript">
+		increment = function(objID){
+			var x = document.getElementById(objID);
+			val = parseInt(x.value)
+			x.value = val + 1;
+		}
+
+		decrement = function(objID){
+			var x = document.getElementById(objID);
+			val = parseInt(x.value)
+			x.value = val - 1;
+		}
+
+		load = function(){
+			reader = new FileReader();
+			reader.readAsText(document.getElementById('file').files[0]);
+			reader.onload = function(e){
+				text = document.getElementById('sList')
+				text.innerHTML = (e.target.result);
+			}
+		}
+	</script>
+</body>
+</html>

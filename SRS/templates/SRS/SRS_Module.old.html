@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SRS Module</title>
+</head>
+<body>
+	<header>
+		Faculty: {{ fName }}<br>
+		Student: {{ sName }}
+	</header>
+	<div class="SRS_Main">
+		<form method="POST" id="SRS_Form" action="/upload_SRS/"> {% csrf_token %}
+			<input type="hidden" name="f" value="{{ fCode }}">
+			<input type="hidden" name="s" value="{{ sCode }}">
+			<textarea name="feedback" placeholder="Faculty Feedback"></textarea>
+			<input type="hidden" id="lC" name="lCount" value="0">
+			<button type="submit">Submit SRS</button>
+		</form>
+		<button onclick="addLink();">Add Link</button>
+	</div>
+	<script type="text/javascript">
+		addLink = function(){
+			linkID = parseInt(document.getElementById('lC').value);
+			form = document.getElementById('SRS_Form');
+			linkBox = document.createElement('input');
+			linkBox.setAttribute('name', 'link_' + linkID);
+			linkBox.setAttribute('placeholder', 'Link to Media goes Here');
+			form.appendChild(linkBox)
+			document.getElementById('lC').value = linkID + 1;
+		}
+	</script>
+</body>
+</html>

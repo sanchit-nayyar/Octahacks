@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SRS</title>
+</head>
+<body>
+	Welcome {{ student.studentName }}
+	<div class="leftnav">
+		<button>Personal Info</button>
+		<button>Attendance</button>
+		<button>SRS</button>
+		<button>Subjects</button>
+		<button>Settings</button>
+		<button onclick="window.location = '/'">Logout</button>
+	</div>
+	<div class="container">
+		<div id="pInfo">
+			<table>
+				<tr>
+					<td>University</td>
+					<td>{{ uni }}</td>
+				</tr>
+			</table>
+		</div>
+		<div id="attendance">
+			{% for att in Attendance %}
+			{% if att.1 == True %}
+				<font color="green">
+					{{ att.0.courseCode }}<br>{{ att.0.attended }}<br>{{ att.0.bunked }}<br>
+				</font>
+			{% endif %}
+			{% if att.1 == False %}
+				<font color="red">
+					{{ att.0.courseCode }}<br>{{ att.0.attended }}<br>{{ att.0.bunked }}<br>
+				</font>
+			{% endif %}
+			{% endfor %}
+		</div>
+		<div id="password">
+			<form method="POST" action="/update_password_student/"> {% csrf_token %}
+				<input type="hidden" name="sCode" value="{{ student.studentCode }}">
+				<input type="password" name="psd" placeholder="New Password">
+				<input type="password" name="psdc" placeholder="Confirm Password">
+				<button type="submit">Update</button>
+			</form>
+		</div>
+		<div id="sub">
+			{% for subject in subjects %}
+				{{ subject }}
+			{% endfor %}
+		</div>
+		<div id="SRS">
+			<header>Student Response System</header>
+			Select Faculty you want to submit feedback for
+			<form method="POST" action="/loadSRS/"> {% csrf_token %}
+				<input type="hidden" name="sCode" value="{{ student.studentCode }}">
+				<select name="fCode">
+					{% for faculty in faculty_tagged %}
+						<option value="{{ faculty.facultyID }}">{{ faculty.facultyName }}</option>
+					{% endfor %}
+				</select>
+				<button type="submit">Load SRS Module</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

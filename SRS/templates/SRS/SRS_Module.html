@@ -1,0 +1,56 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SRS Module</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'CSS/SRS.css' %}">
+</head>
+<body>
+	<div class="header-div">
+		<div style="background-color: #383B42;">
+		<h1 style="text-align: center;">Student Response Survey</h1>
+		</div>
+		<header>
+			<div class="font-style">
+			Faculty: {{ fName }}
+			<div style="float: right;">Student: {{ sName }}</div>
+		</div>
+		</header>
+	</div>
+	<br>
+	<div class="SRS_Main">
+		<form method="POST" id="SRS_Form" action="/upload_SRS/"> {% csrf_token %}
+			{% for ques in question %}
+			<h3 style="display: inline;" >{{ques.quesText}} </h3>
+			<br><center>
+			<input type="radio" name="{{ques.quesCode}}" value="1" required>1
+			<input type="radio" name="{{ques.quesCode}}" value="2">2
+			<input type="radio" name="{{ques.quesCode}}" value="3">3
+			<input type="radio" name="{{ques.quesCode}}" value="4">4
+			<input type="radio" name="{{ques.quesCode}}" value="5">5
+			<input type="radio" name="{{ques.quesCode}}" value="0" Checked>NA</center>
+			<br>
+			{% endfor %}
+			<input type="hidden" name="f" value="{{ fCode }}">
+			<input type="hidden" name="s" value="{{ sCode }}">
+			<div style="width: 100%;"><textarea style="width: 100%; display: block;" name="feedback" placeholder="Faculty Feedback" class="place"></textarea></div>
+			<input type="hidden" id="lC" name="lCount" value="0">
+			<br><br><br>
+			<button type="submit" style="display: inline; float: right;">Submit SRS</button>
+		</form>
+		<button onclick="addLink();" style="display: inline;  position: fixed; right: 120px;">Add Link</button>
+	</div>
+	<script type="text/javascript">
+		addLink = function(){				
+			linkID = parseInt(document.getElementById('lC').value);
+			form = document.getElementById('SRS_Form');
+			linkBox = document.createElement('input');
+			linkBox.setAttribute('name', 'link_' + linkID);
+			linkBox.setAttribute('placeholder', 'Link to Media goes Here');
+			form.appendChild(linkBox)
+			document.getElementById('lC').value = linkID + 1;
+		}
+	</script>
+</body>
+</html>

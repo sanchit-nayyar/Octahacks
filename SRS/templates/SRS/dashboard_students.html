@@ -1,0 +1,150 @@
+{% load staticfiles %}
+{% load mathfilters %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dashboard</title>
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="{% static 'CSS/Stud_Dashboard.css' %}">
+	<meta charset="utf-8">
+</head>
+<body>
+	<span class="bckg"></span>
+<header>
+  <h1>Dashboard</h1>
+  <nav>
+    <ul>
+    	<li>
+        <a href="javascript:void(0);" data-title="Information">Information</a>
+      </li>
+      <li>
+        <a href="javascript:void(0);" data-title="Attendence">Attendence</a>
+      </li>
+       
+      <li>
+        <a href="javascript:void(0);" data-title="SRS">SRS</a>
+      </li>
+      <li>
+        <a href="javascript:void(0);" data-title="Subjects">Subjects</a>
+      </li>
+      <li>
+        <a href="javascript:void(0);" data-title="Security">Security</a>
+      </li>
+      <li>
+        <a href="/" data-title="Sign Out">Sign Out</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <div class="title">
+    <h2>Attendence</h2>
+    <a href="javascript:void(0);">Hello {{ student.studentName }} !</a>
+  </div>
+
+<p> 
+<article class="larg">
+<div class="profile-info" id = "info">
+	<div class = 'image-info'>
+		<img src="{% static 'index.png' %}" alt="" class="image-size">
+	</div>
+	<div class = 'details-info' >
+		<h4>Name : {{ student.studentName }}</h4>
+		<h5>Roll Number : {{ student.studentCode }}</h5>
+		<h5>Section : {{ student.batch }}</h5>
+	</div>
+</div>
+</article>
+<article>
+	<div id="attendance">
+		<center>
+		<table class="att-table">
+			<thead>
+				<tr>
+					<th>Subject Code</th>
+					<th>Total Classes</th>
+					<th>Classses Attended</th>
+					<th>Percentage</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for attendance in Attendance %}
+				<tr>
+					<td>{{ attendance.0.courseCode }}</td>
+					<td>{{ attendance.0.attended|add:attendance.0.bunked }}</td>
+					<td>{{ attendance.0.attended }}</td>
+					<td>
+						{% with total=attendance.0.attended|add:attendance.0.bunked %}
+						{% if attendance.1 == True %}
+						<font color="green">{{ attendance.0.attended|div:total|mul:100 }}</font>
+						{% endif %}
+						{% if attendance.1 == False %}
+						<font color="red">{{ attendance.0.attended|div:total|mul:100 }}</font>
+						{% endif %}
+						{% endwith %}
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		</center>
+	</div>
+</article>
+<article>
+	<div id="subjects">
+		<center>
+		<table class="sub-table">
+			<thead>
+				<tr>
+					<th>Subject Code</th>
+					<th>Subject Name</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for subject in subjects %}
+				<tr>
+					<td>{{ subject.courseCode }}</td>
+					<td>{{ subject.courseName }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		</center>
+	</div>
+	<div class="sect-form" id="Security"> 
+		<form action="/update_password_student/" method="POST" accept-charset="utf-8"> {% csrf_token %}
+			<input type="hidden" name="sCode" value="{{ student.studentCode }}">
+			<input type="password" name="psd" placeholder="Enter New Password" required>
+			<p>
+			<input type="password" name="psdc" placeholder="Enter New Password Again" required>
+			<p>
+			<button class="sect-button">Submit</button>
+		</form>
+	</div>
+	<div class = 'SRS'>
+		<center>
+			<form method="POST" action="/loadSRS/"> {% csrf_token %}
+		<div class="btn-group">
+			<input type="hidden" name="sCode" value="{{ student.studentCode }}">
+
+    <select name="fCode">
+    	{% for faculty in faculty_tagged %}
+			<option class="dropdown-item" value="{{ faculty.facultyID }}">{{ faculty.facultyName }}</option>
+		{% endfor %}
+	</form>
+    </center>
+        </select>
+</div>
+  			<button class="srs-button" >Submit</button>
+</div>
+</article>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="JS/Stud_Dashboard.js" type="text/javascript" charset="utf-8" async defer></script>
+</body>
+</html>	

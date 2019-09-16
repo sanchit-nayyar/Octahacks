@@ -1,0 +1,124 @@
+{% load staticfiles %}
+{% load mathfilters %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dashboard</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="{% static 'CSS/Teach_Dashboard.css' %}">
+	<meta charset="utf-8">
+</head>
+<body>
+	<span class="bckg"></span>
+	<header>
+		<h1>Dashboard</h1>
+		<nav>
+			<ul>
+				<li>
+					<a href="javascript:void(0);" data-title="Information">Information</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);" data-title="Attendence">Attendence</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);" data-title="SRS">SRS</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);" data-title="Students">Students</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);" data-title="Security">Security</a>
+				</li>
+				<li>
+					<a href="/" data-title="Logout">Log Out</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+	<main>
+		<div class="title">
+			<h2>Attendence</h2>
+			<a href="javascript:void(0);">Hello {{ user.facultyName }} !</a>
+		</div>
+
+		<article class="larg">
+			<div class="profile-info" id = "info">
+				<div class = 'image-info'>
+					<img src="/home/pranavpratapsingh/Pictures/5258.jpg" alt="" class="image-size">
+				</div>
+				<div class = 'details-info' >
+					<h4>Name : {{ user.facultyName }}</h4>
+					<h5>Roll Number : {{ user.facultyCode }}</h5>
+				</div>
+			</div>
+			<div class="sect-form" id="Security"> 
+				<form action="stud_dashboard_submit" method="post" accept-charset="utf-8">
+					</div>
+					<div id="students">
+						<center>
+							<table class="stud-table">
+								<thead>
+									<tr>
+										<th>Roll Number</th>
+										<th>Subject Code</th>
+										<th>Attendance Percent</th>
+
+									</tr>
+								</thead>
+									{{ attendance }}
+								<tbody>
+									{% for student in attendance %}
+									<tr>
+										<td>{{ student.studentID }}</td>
+										<td>{{ student.courseCode }}</td>
+										<td>
+						{% with total=student.attended|add:student.bunked %}
+						{% if total >= 0.75 %}
+						<font color="green">{{ student.attended|div:total|mul:100 }}</font>
+						{% endif %}
+						{% if total < 0.75 %}
+						<font color="red">{{ student.attended|div:total|mul:100 }}</font>
+						{% endif %}
+						{% endwith %}
+										</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</center>
+					</div>
+					<div id = 'Attendance'>
+						<div class="btn-group" style="display: inline; border: 0px;">
+							<select>
+								{% for batch in batches %}
+									<option value="{{ batch.batch }}">{{ batch.batch }}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="fCode" value="{{ user.facultyCode }}">
+						</div>
+						<h3 style="display: inline;">List Of Roll Numbers Present : </h3>
+						<textarea placeholder="studentsList" id="sList" name="studentsList"></textarea>
+						<br>
+						<br>
+						<input type="file" class="sect-button">
+						<button class="sect-button">Submit</button>
+
+					</div>
+				</article>
+				<input type="password" placeholder="Enter New Password" required>
+					<p>
+						<input type="password" placeholder="Enter New Password Again" required>
+					</p>
+						<p>
+							<button class="sect-button">Submit</button>
+						</p>
+						</form>
+			</main>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+			<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+			<script src="{% static 'JS/Teach_dashboard.js' %}" type="text/javascript" charset="utf-8" async defer></script>
+		</body>
+		</html>

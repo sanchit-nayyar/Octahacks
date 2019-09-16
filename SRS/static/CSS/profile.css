@@ -1,0 +1,25 @@
+.profile-info{
+  width : 100%;
+}
+
+.image-info{
+  width : 40%;
+  float: left;
+}
+.image-size{
+	height: 100%;
+	width: 100%;
+}
+.details-info{
+  width : 50%;
+  float: right;
+}
+/*
+.profile-info h1{
+  color: pink;
+
+}
+.profile-info h2{
+  color: yellow;
+
+}*/
